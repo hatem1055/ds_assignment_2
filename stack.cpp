@@ -56,6 +56,66 @@ class Stack{
             cout << "]" << endl;
         }
 };
+int priority (char alpha){
+    if(alpha == '+' || alpha =='-')
+        return 1;
+
+    if(alpha == '*' || alpha =='/')
+        return 2;
+
+    if(alpha == '^')
+        return 3;
+
+
+    return 0;
+}
+string convert(string infix){
+    int i = 0;
+    string postfix = "";
+
+
+    Stack<char>s ;
+
+    while(infix[i]!='\0')
+    {
+        if(isalpha(infix[i]) || isdigit(infix[i]) || isspace(infix[i]))
+        {
+            postfix += infix[i];
+            i++;
+        }
+
+        else if(infix[i]=='(')
+        {
+            s.push(infix[i]);
+            i++;
+        }
+
+        else if(infix[i]==')')
+        {
+            while(s.getTop()!='('){
+                postfix += s.getTop();
+                s.pop();
+            }
+            s.pop();
+            i++;
+        }
+        else
+        {
+            while (!s.isEmpty() && priority(infix[i]) <= priority(s.getTop())){
+                postfix += s.getTop();
+                s.pop();
+            }
+            s.push(infix[i]);
+            i++;
+        }
+    }
+    while(!s.isEmpty()){
+        postfix += s.getTop();
+        s.pop();
+    }
+
+    return postfix;
+}
 int longest_valid_perentces(string s){
     Stack<char> open;
     Stack<char> close;
